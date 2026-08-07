@@ -17,10 +17,7 @@ import {
   Palette,
   ShieldCheck,
   Building2,
-  Bell,
-  Award,
-  Cpu,
-  Package
+  Award
 } from 'lucide-react';
 
 export function Sidebar() {
@@ -38,15 +35,9 @@ export function Sidebar() {
     { name: 'Certificates', href: '/certificates', icon: Award },
     { name: 'User Management', href: '/users', icon: Users },
     { name: 'Reports & Analytics', href: '/reports', icon: BarChart3 },
-    { name: 'College Branding', href: '/branding', icon: Palette },
+    { name: 'Branding & Customization', href: '/branding', icon: Palette },
     { name: 'Subscription Plan', href: '/subscription', icon: Building2 },
     { name: 'Settings', href: '/settings', icon: Settings },
-  ];
-
-  const platformNav = [
-    { name: 'Products Catalog', href: '/products', icon: Package },
-    { name: 'Matrix-IoT Platform', href: '/products/matrix-iot', icon: Cpu },
-    { name: 'Platform SaaS Admin', href: '/platform', icon: ShieldCheck },
   ];
 
   const learnerNav = [
@@ -56,23 +47,31 @@ export function Sidebar() {
     { name: 'My Certificates', href: '/learn/certificates', icon: Award },
   ];
 
+  const platformNav = [
+    { name: 'Superadmin Onboarding', href: '/platform', icon: ShieldCheck },
+  ];
+
   return (
     <aside className="w-64 bg-white border-r border-slate-200 min-h-screen flex flex-col justify-between hidden md:flex">
       <div>
-        {/* Tenant Header Branding */}
-        <div className="p-5 border-b border-slate-100 flex items-center space-x-3">
-          <div className="w-9 h-9 rounded-lg bg-primary flex items-center justify-center text-white font-bold text-lg shadow-sm">
-            {branding.college_abbreviation || 'LMS'}
-          </div>
-          <div>
+        {/* Customer Standalone LMS Header */}
+        <div className="p-4 border-b border-slate-100 flex items-center space-x-3 bg-slate-50/50">
+          {branding.logo_url ? (
+            <img src={branding.logo_url} alt="Logo" className="w-9 h-9 object-contain rounded-lg border border-slate-200 bg-white p-0.5 shadow-2xs" />
+          ) : (
+            <div className="w-9 h-9 rounded-lg bg-primary flex items-center justify-center text-white font-bold text-base shadow-sm">
+              {branding.college_abbreviation || 'LMS'}
+            </div>
+          )}
+          <div className="min-w-0">
             <h1 className="font-bold text-slate-900 text-sm truncate max-w-[150px]">{tenantName}</h1>
-            <p className="text-xs text-slate-500">CollegeLMS Cloud</p>
+            <p className="text-[11px] text-slate-500 font-medium">Standalone LMS</p>
           </div>
         </div>
 
-        {/* Main College Admin Nav */}
+        {/* Main Navigation */}
         <div className="px-3 py-4 space-y-1">
-          <p className="px-3 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">College Portal</p>
+          <p className="px-3 text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-2">College Portal</p>
           {navigation.map((item) => {
             const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
             const Icon = item.icon;
@@ -93,9 +92,9 @@ export function Sidebar() {
           })}
         </div>
 
-        {/* Learner Portal Section */}
+        {/* Learner View Section */}
         <div className="px-3 py-2 border-t border-slate-100 space-y-1">
-          <p className="px-3 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Learner View</p>
+          <p className="px-3 text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-2">Learner View</p>
           {learnerNav.map((item) => {
             const isActive = pathname === item.href;
             const Icon = item.icon;
@@ -117,13 +116,13 @@ export function Sidebar() {
         </div>
       </div>
 
-      {/* Platform Admin Link */}
+      {/* Superadmin Link */}
       <div className="p-3 border-t border-slate-100 bg-slate-50">
         {platformNav.map((item) => (
           <Link
             key={item.name}
             href={item.href}
-            className="flex items-center space-x-3 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-200/60 rounded-md transition-colors"
+            className="flex items-center space-x-3 px-3 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-200/60 rounded-md transition-colors"
           >
             <item.icon className="w-4 h-4 text-slate-500" />
             <span>{item.name}</span>
