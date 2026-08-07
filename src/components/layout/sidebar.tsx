@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useParams } from 'next/navigation';
 import { useTenant } from '@/components/providers/tenant-provider';
 import {
   LayoutDashboard,
@@ -22,58 +22,59 @@ import {
 
 export function Sidebar() {
   const pathname = usePathname();
+  const params = useParams();
+  const tenantSlug = params?.tenantSlug as string;
   const { branding, tenantName } = useTenant();
 
+  // If inside a standalone college route (/c/[tenantSlug]), map all links under /c/[tenantSlug]/...
+  const basePath = tenantSlug ? `/c/${tenantSlug}` : '';
+
   const navigation = [
-    { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-    { name: 'Courses', href: '/courses', icon: BookOpen },
-    { name: 'Programmes', href: '/programmes', icon: GraduationCap },
-    { name: 'Calendar & Schedule', href: '/calendar', icon: Calendar },
-    { name: 'Attendance', href: '/attendance', icon: ClipboardCheck },
-    { name: 'Assessments', href: '/assessments', icon: FileCheck },
-    { name: 'Question Banks', href: '/question-banks', icon: BookOpen },
-    { name: 'Certificates', href: '/certificates', icon: Award },
-    { name: 'User Management', href: '/users', icon: Users },
-    { name: 'Reports & Analytics', href: '/reports', icon: BarChart3 },
-    { name: 'Branding & Customization', href: '/branding', icon: Palette },
-    { name: 'Subscription Plan', href: '/subscription', icon: Building2 },
-    { name: 'Settings', href: '/settings', icon: Settings },
+    { name: 'Dashboard', href: tenantSlug ? `${basePath}` : '/dashboard', icon: LayoutDashboard },
+    { name: 'Courses', href: tenantSlug ? `${basePath}/courses` : '/courses', icon: BookOpen },
+    { name: 'Programmes', href: tenantSlug ? `${basePath}/programmes` : '/programmes', icon: GraduationCap },
+    { name: 'Calendar & Schedule', href: tenantSlug ? `${basePath}/calendar` : '/calendar', icon: Calendar },
+    { name: 'Attendance', href: tenantSlug ? `${basePath}/attendance` : '/attendance', icon: ClipboardCheck },
+    { name: 'Assessments', href: tenantSlug ? `${basePath}/assessments` : '/assessments', icon: FileCheck },
+    { name: 'Question Banks', href: tenantSlug ? `${basePath}/question-banks` : '/question-banks', icon: BookOpen },
+    { name: 'Certificates', href: tenantSlug ? `${basePath}/certificates` : '/certificates', icon: Award },
+    { name: 'User Management', href: tenantSlug ? `${basePath}/users` : '/users', icon: Users },
+    { name: 'Reports & Analytics', href: tenantSlug ? `${basePath}/reports` : '/reports', icon: BarChart3 },
+    { name: 'Branding Studio', href: tenantSlug ? `${basePath}/branding` : '/branding', icon: Palette },
+    { name: 'Subscription Plan', href: tenantSlug ? `${basePath}/subscription` : '/subscription', icon: Building2 },
+    { name: 'Settings', href: tenantSlug ? `${basePath}/settings` : '/settings', icon: Settings },
   ];
 
   const learnerNav = [
-    { name: 'Learner Dashboard', href: '/learn', icon: LayoutDashboard },
-    { name: 'My Enrolled Courses', href: '/learn/courses', icon: BookOpen },
-    { name: 'My Results', href: '/learn/results', icon: FileCheck },
-    { name: 'My Certificates', href: '/learn/certificates', icon: Award },
-  ];
-
-  const platformNav = [
-    { name: 'Superadmin Onboarding', href: '/platform', icon: ShieldCheck },
+    { name: 'Learner Dashboard', href: tenantSlug ? `${basePath}/learn` : '/learn', icon: LayoutDashboard },
+    { name: 'My Enrolled Courses', href: tenantSlug ? `${basePath}/learn/courses` : '/learn/courses', icon: BookOpen },
+    { name: 'My Results', href: tenantSlug ? `${basePath}/learn/results` : '/learn/results', icon: FileCheck },
+    { name: 'My Certificates', href: tenantSlug ? `${basePath}/learn/certificates` : '/learn/certificates', icon: Award },
   ];
 
   return (
     <aside className="w-64 bg-white border-r border-slate-200 min-h-screen flex flex-col justify-between hidden md:flex">
       <div>
-        {/* Customer Standalone LMS Header */}
-        <div className="p-4 border-b border-slate-100 flex items-center space-x-3 bg-slate-50/50">
+        {/* Customer Standalone College LMS Header */}
+        <div className="p-4 border-b border-slate-100 flex items-center space-x-3 bg-slate-50/60">
           {branding.logo_url ? (
-            <img src={branding.logo_url} alt="Logo" className="w-9 h-9 object-contain rounded-lg border border-slate-200 bg-white p-0.5 shadow-2xs" />
+            <img src={branding.logo_url} alt="College Logo" className="w-10 h-10 object-contain rounded-lg border border-slate-200 bg-white p-0.5 shadow-2xs" />
           ) : (
-            <div className="w-9 h-9 rounded-lg bg-primary flex items-center justify-center text-white font-bold text-base shadow-sm">
+            <div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center text-white font-bold text-base shadow-sm">
               {branding.college_abbreviation || 'LMS'}
             </div>
           )}
           <div className="min-w-0">
             <h1 className="font-bold text-slate-900 text-sm truncate max-w-[150px]">{tenantName}</h1>
-            <p className="text-[11px] text-slate-500 font-medium">Standalone LMS</p>
+            <p className="text-[11px] text-slate-500 font-medium">Standalone LMS Portal</p>
           </div>
         </div>
 
-        {/* Main Navigation */}
+        {/* Navigation */}
         <div className="px-3 py-4 space-y-1">
           <p className="px-3 text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-2">College Portal</p>
           {navigation.map((item) => {
-            const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
+            const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(`${item.href}/`));
             const Icon = item.icon;
             return (
               <Link
@@ -92,7 +93,7 @@ export function Sidebar() {
           })}
         </div>
 
-        {/* Learner View Section */}
+        {/* Learner View */}
         <div className="px-3 py-2 border-t border-slate-100 space-y-1">
           <p className="px-3 text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-2">Learner View</p>
           {learnerNav.map((item) => {
@@ -116,19 +117,18 @@ export function Sidebar() {
         </div>
       </div>
 
-      {/* Superadmin Link */}
-      <div className="p-3 border-t border-slate-100 bg-slate-50">
-        {platformNav.map((item) => (
+      {/* Host Onboarding Link (Only shown outside standalone tenant pages) */}
+      {!tenantSlug && (
+        <div className="p-3 border-t border-slate-100 bg-slate-50">
           <Link
-            key={item.name}
-            href={item.href}
+            href="/"
             className="flex items-center space-x-3 px-3 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-200/60 rounded-md transition-colors"
           >
-            <item.icon className="w-4 h-4 text-slate-500" />
-            <span>{item.name}</span>
+            <ShieldCheck className="w-4 h-4 text-slate-500" />
+            <span>Superadmin Host Landing</span>
           </Link>
-        ))}
-      </div>
+        </div>
+      )}
     </aside>
   );
 }
