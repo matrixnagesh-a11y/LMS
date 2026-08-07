@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Matrix-IoT Hardware & Software Integration Tutorial | matrix-iot.com</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --secondary: #7c3aed;
+      --dark: #0f172a;
+      --slate-800: #1e293b;
+      --slate-600: #475569;
+      --slate-100: #f1f5f9;
+      --slate-50: #f8fafc;
+      --emerald: #10b981;
+      --amber: #f59e0b;
+    }
+    
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, monospace, sans-serif;
+      color: var(--dark);
+      background-color: #ffffff;
+      line-height: 1.6;
+    }
+
+    header {
+      background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%);
+      color: white;
+      padding: 40px 30px;
+      border-bottom: 4px solid var(--primary);
+    }
+
+    .badge {
+      display: inline-block;
+      background: var(--primary);
+      color: white;
+      padding: 4px 12px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    h1 { font-size: 32px; font-weight: 800; }
+    .meta { font-size: 14px; color: #94a3b8; margin-top: 8px; }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 40px 24px;
+    }
+
+    .module {
+      margin-bottom: 48px;
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+    }
+
+    .module-num {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+    }
+
+    .module h2 {
+      font-size: 22px;
+      color: var(--slate-800);
+      margin-bottom: 16px;
+      border-bottom: 2px solid var(--slate-100);
+      padding-bottom: 8px;
+    }
+
+    p { font-size: 15px; color: var(--slate-600); margin-bottom: 16px; }
+
+    /* Code blocks */
+    pre {
+      background: #0f172a;
+      color: #f8fafc;
+      padding: 20px;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-family: "Courier New", Courier, monospace;
+      font-size: 13.5px;
+      line-height: 1.5;
+      margin: 16px 0;
+      border-left: 4px solid var(--accent, #38bdf8);
+    }
+
+    code {
+      font-family: "Courier New", Courier, monospace;
+      background: #f1f5f9;
+      color: #0f172a;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 13px;
+    }
+
+    pre code {
+      background: transparent;
+      color: inherit;
+      padding: 0;
+    }
+
+    .callout {
+      background: #eff6ff;
+      border-left: 4px solid var(--primary);
+      padding: 16px;
+      border-radius: 6px;
+      margin: 20px 0;
+      font-size: 14px;
+      color: #1e40af;
+    }
+
+    .callout-title { font-weight: bold; margin-bottom: 4px; }
+
+    /* Diagram Wiring */
+    .wiring-box {
+      background: #f8fafc;
+      border: 1px dashed #cbd5e1;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 16px 0;
+    }
+
+    .wiring-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    .wiring-table th, .wiring-table td {
+      padding: 8px 12px;
+      border: 1px solid #cbd5e1;
+      font-size: 13px;
+      text-align: left;
+    }
+
+    .wiring-table th { background: #e2e8f0; font-weight: bold; }
+
+    footer {
+      text-align: center;
+      padding: 30px;
+      font-size: 13px;
+      color: var(--slate-600);
+      border-top: 1px solid #e2e8f0;
+    }
+
+    @media print {
+      body { background: white; }
+      .module { border: 1px solid #94a3b8; page-break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="badge">Official Technical Guide</div>
+    <h1>Matrix-IoT Hands-On Integration Tutorial</h1>
+    <div class="meta">Target Audience: Engineering Students, Lab Instructors, System Engineers | matrix-iot.com</div>
+  </header>
+
+  <div class="container">
+
+    <!-- Overview -->
+    <div class="callout">
+      <div class="callout-title">💡 Tutorial Objective</div>
+      By completing this tutorial, you will configure an ESP32 micro-controller with an RFID scanner, connect it to the Matrix-IoT Gateway via MQTT/TLS, and automatically push real-time student attendance and lab assessment scores into Matrix Cloud LMS.
+    </div>
+
+    <!-- Module 1 -->
+    <div class="module">
+      <div class="module-num">Module 1</div>
+      <h2>Hardware Assembly & Pin Wiring</h2>
+      <p>Connect your ESP32 NodeMCU dev kit to the PN532 RFID NFC reader using the SPI interface according to the wiring pinout below:</p>
+
+      <div class="wiring-box">
+        <strong>Pin Mapping: ESP32 to PN532 RFID Module</strong>
+        <table class="wiring-table">
+          <thead>
+            <tr>
+              <th>ESP32 Pin</th>
+              <th>PN532 RFID Module Pin</th>
+              <th>Description / Signal</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>3V3</strong></td><td>VCC</td><td>3.3V Power Supply</td></tr>
+            <tr><td><strong>GND</strong></td><td>GND</td><td>Ground Reference</td></tr>
+            <tr><td><strong>GPIO 18</strong></td><td>SCK</td><td>SPI Clock</td></tr>
+            <tr><td><strong>GPIO 19</strong></td><td>MISO</td><td>SPI Master In Slave Out</td></tr>
+            <tr><td><strong>GPIO 23</strong></td><td>MOSI</td><td>SPI Master Out Slave In</td></tr>
+            <tr><td><strong>GPIO 5</strong></td><td>SS / CS</td><td>SPI Chip Select</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Module 2 -->
+    <div class="module">
+      <div class="module-num">Module 2</div>
+      <h2>ESP32 MicroPython Firmware</h2>
+      <p>Upload the following MicroPython code snippet to your ESP32 device. This firmware initializes Wi-Fi, scans for student RFID cards, and publishes JSON payloads to Matrix-IoT Broker.</p>
+
+<pre><code># matrix_iot_node.py - Matrix-IoT ESP32 MicroPython Client
+import network
+import ujson
+import time
+from umqtt.simple import MQTTClient
+from machine import Pin, SPI
+
+# 1. Network Configuration
+WIFI_SSID = "College_Lab_WiFi"
+WIFI_PASS = "LabSecurePass2026"
+MQTT_BROKER = "mqtt.matrix-iot.com"
+CLIENT_ID = "esp32_lab_station_01"
+COLLEGE_TENANT_ID = "meridian_college"
+
+def connect_wifi():
+    wlan = network.WLAN(network.STA_IF)
+    wlan.active(True)
+    if not wlan.isconnected():
+        print("Connecting to Wi-Fi...")
+        wlan.connect(WIFI_SSID, WIFI_PASS)
+        while not wlan.isconnected():
+            time.sleep(0.5)
+    print("Wi-Fi Connected! IP:", wlan.ifconfig()[0])
+
+# 2. Main Scan & Publish Loop
+def publish_attendance(rfid_uid):
+    client = MQTTClient(CLIENT_ID, MQTT_BROKER, port=8883, ssl=True)
+    client.connect()
+    
+    payload = ujson.dumps({
+        "tenant_id": COLLEGE_TENANT_ID,
+        "station_id": CLIENT_ID,
+        "rfid_card_uid": rfid_uid,
+        "timestamp": time.time(),
+        "action": "LAB_CHECK_IN"
+    })
+    
+    topic = "matrix-iot/" + COLLEGE_TENANT_ID + "/attendance"
+    client.publish(topic, payload)
+    print("Published RFID UID [" + rfid_uid + "] to Matrix Cloud LMS!")
+    client.disconnect()
+
+connect_wifi()
+# Simulated RFID scan callback
+publish_attendance("9A-4F-88-C2")
+</code></pre>
+    </div>
+
+    <!-- Module 3 -->
+    <div class="module">
+      <div class="module-num">Module 3</div>
+      <h2>Matrix LMS API Token & Webhook Verification</h2>
+      <p>In your Matrix LMS College Admin portal, generate an IoT Device API Key under <code>/settings/api</code>. Send a HTTP POST request to verify edge authentication:</p>
+
+<pre><code>curl -X POST https://api.matrix-iot.com/v1/telemetry/sync \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer mtx_live_99812a4f781c" \
+  -d '{
+    "tenant_id": "meridian_college",
+    "course_id": "CS302-IOT",
+    "student_rfid": "9A-4F-88-C2",
+    "lab_bench_id": "BENCH_04",
+    "hardware_status": "PASSED"
+  }'
+</code></pre>
+    </div>
+
+    <!-- Module 4 -->
+    <div class="module">
+      <div class="module-num">Module 4</div>
+      <h2>Automated Assessment & Grade Synchronization</h2>
+      <p>When student hardware tests complete, Matrix-IoT triggers an automated lab grade update directly in the student's Gradebook in Matrix Cloud LMS.</p>
+      
+      <div class="callout">
+        <div class="callout-title">✅ Result Verification</div>
+        Navigate to <strong>Matrix LMS &gt; Attendance</strong> or <strong>Assessments</strong> to view live updated timestamp records, lab duration metrics, and verified grade submissions.
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    &copy; 2026 Matrix-IoT Integration Manual | matrix-iot.com
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Matrix-IoT System Architecture & Official Brochure | matrix-iot.com</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --secondary: #7c3aed;
+      --accent: #06b6d4;
+      --dark: #0f172a;
+      --slate-800: #1e293b;
+      --slate-600: #475569;
+      --slate-100: #f1f5f9;
+      --slate-50: #f8fafc;
+      --emerald: #10b981;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: var(--dark);
+      background-color: #ffffff;
+      line-height: 1.6;
+    }
+    
+    header {
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #1e293b 100%);
+      color: white;
+      padding: 60px 40px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::before {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(37,99,235,0.15) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .badge {
+      display: inline-block;
+      background: rgba(37, 99, 235, 0.2);
+      border: 1px solid rgba(59, 130, 246, 0.4);
+      color: #93c5fd;
+      padding: 6px 16px;
+      border-radius: 9999px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-size: 42px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 16px;
+    }
+
+    .subtitle {
+      font-size: 18px;
+      color: #cbd5e1;
+      max-width: 750px;
+      margin: 0 auto 30px auto;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 50px 24px;
+    }
+
+    .section-title {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 12px;
+      text-align: center;
+    }
+
+    .section-subtitle {
+      font-size: 15px;
+      color: var(--slate-600);
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+      margin-bottom: 50px;
+    }
+
+    .card {
+      background: var(--slate-50);
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 28px;
+      transition: all 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px -10px rgba(0, 0, 0, 0.1);
+      border-color: var(--primary);
+    }
+
+    .card-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: #dbeafe;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      font-weight: bold;
+      margin-bottom: 18px;
+    }
+
+    .card h3 {
+      font-size: 19px;
+      margin-bottom: 10px;
+      color: var(--slate-800);
+    }
+
+    .card p {
+      font-size: 14px;
+      color: var(--slate-600);
+    }
+
+    /* Diagram Styling */
+    .diagram-container {
+      background: #0f172a;
+      border-radius: 20px;
+      padding: 36px;
+      color: white;
+      margin: 40px 0 60px 0;
+      box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.5);
+    }
+
+    .diagram-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #38bdf8;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .flow-steps {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .flow-step {
+      flex: 1;
+      min-width: 200px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      position: relative;
+    }
+
+    .flow-step-num {
+      width: 28px;
+      height: 28px;
+      background: var(--primary);
+      color: white;
+      border-radius: 50%;
+      font-size: 12px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 12px auto;
+    }
+
+    .flow-step h4 {
+      font-size: 16px;
+      color: #f8fafc;
+      margin-bottom: 6px;
+    }
+
+    .flow-step p {
+      font-size: 12px;
+      color: #94a3b8;
+    }
+
+    .arrow {
+      font-size: 24px;
+      color: #38bdf8;
+      font-weight: bold;
+    }
+
+    /* Specs Table */
+    .specs-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      border: 1px solid #e2e8f0;
+    }
+
+    .specs-table th, .specs-table td {
+      padding: 14px 20px;
+      text-align: left;
+      font-size: 14px;
+    }
+
+    .specs-table th {
+      background: var(--slate-100);
+      color: var(--slate-800);
+      font-weight: 700;
+    }
+
+    .specs-table tr:nth-child(even) {
+      background: var(--slate-50);
+    }
+
+    .specs-table tr:hover {
+      background: #f1f5f9;
+    }
+
+    /* Action Banner */
+    .cta-banner {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      border-radius: 20px;
+      color: white;
+      padding: 40px;
+      text-align: center;
+      margin-top: 60px;
+    }
+
+    .cta-banner h2 {
+      font-size: 28px;
+      margin-bottom: 12px;
+    }
+
+    .btn {
+      display: inline-block;
+      background: white;
+      color: var(--primary);
+      font-weight: 700;
+      padding: 14px 32px;
+      border-radius: 10px;
+      text-decoration: none;
+      margin-top: 20px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+      transition: all 0.2s;
+    }
+
+    .btn:hover {
+      background: #f8fafc;
+      transform: scale(1.03);
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px;
+      font-size: 13px;
+      color: var(--slate-600);
+      border-top: 1px solid #e2e8f0;
+      margin-top: 60px;
+    }
+
+    @media print {
+      body { background: white; }
+      header { background: #0f172a !important; -webkit-print-color-adjust: exact; }
+      .cta-banner { background: #1e293b !important; -webkit-print-color-adjust: exact; }
+      .btn { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="badge">Official Product Brochure</div>
+    <h1>Matrix-IoT Platform</h1>
+    <p.subtitle>Hardware-to-Cloud Education & Lab Automation System hosted at matrix-iot.com and integrated with Matrix LMS Cloud.</p.subtitle>
+  </header>
+
+  <div class="container">
+    <h2 class="section-title">End-to-End System Architecture</h2>
+    <p class="section-subtitle">Bridging physical microcontrollers, edge gateways, real-time sensor telemetry, and automated college grading.</p>
+
+    <!-- Architecture Diagram -->
+    <div class="diagram-container">
+      <div class="diagram-title">System Data Flow & Topology</div>
+      <div class="flow-steps">
+        <div class="flow-step">
+          <div class="flow-step-num">1</div>
+          <h4>IoT Edge Node</h4>
+          <p>ESP32 / Raspberry Pi sensors, RFID attendance badges, lab test equipment.</p>
+        </div>
+        <div class="arrow">➔</div>
+        <div class="flow-step">
+          <div class="flow-step-num">2</div>
+          <h4>Edge Gateway</h4>
+          <p>MQTT/TLS broker with local caching, instant card verification & relay control.</p>
+        </div>
+        <div class="arrow">➔</div>
+        <div class="flow-step">
+          <div class="flow-step-num">3</div>
+          <h4>Matrix Cloud LMS</h4>
+          <p>Supabase Row-Level Security, multi-tenant college isolation & REST API.</p>
+        </div>
+        <div class="arrow">➔</div>
+        <div class="flow-step">
+          <div class="flow-step-num">4</div>
+          <h4>Real-time Analytics</h4>
+          <p>Student attendance log, auto-graded lab assessments, and device health monitoring.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Core Features Grid -->
+    <h2 class="section-title">Key Capabilities</h2>
+    <p class="section-subtitle">Built specifically for technical colleges, engineering universities, and smart campuses.</p>
+
+    <div class="grid-3">
+      <div class="card">
+        <div class="card-icon">⚡</div>
+        <h3>Automated RFID Lab Attendance</h3>
+        <p>Students swipe their smart badges at the lab entry. Attendance records automatically sync to Matrix LMS with millisecond latency and tamper-proof verification.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">🔬</div>
+        <h3>Hardware-Based Lab Grading</h3>
+        <p>Connect microcontrollers directly to assignment test benches. Code uploads are validated on physical target devices with real-time feedback to student dashboards.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">🛡️</div>
+        <h3>Multi-Tenant Cloud Security</h3>
+        <p>Tenant isolation guaranteed via Supabase Row Level Security (RLS). Every college's telemetry and student records remain encrypted and segregated.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">📡</div>
+        <h3>MQTT & WebSockets Engine</h3>
+        <p>Supports low-latency streaming of sensor data (temperature, voltage, logic states) with fallback offline buffer for network drops.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">💻</div>
+        <h3>MicroPython & C++ SDKs</h3>
+        <p>Includes plug-and-play libraries for ESP32, STM32, Arduino, and Raspberry Pi with pre-configured API authentication wrappers.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">📊</div>
+        <h3>Campus Telemetry Dashboard</h3>
+        <p>Real-time analytics for lab managers detailing active devices, energy usage, student lab session durations, and hardware fault alerts.</p>
+      </div>
+    </div>
+
+    <!-- Specs Matrix -->
+    <h2 class="section-title">Technical Specifications</h2>
+    <p class="section-subtitle">Hardware compatibility, cloud protocols, and security standards.</p>
+
+    <table class="specs-table">
+      <thead>
+        <tr>
+          <th>Category</th>
+          <th>Supported Specification / Standard</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Hardware Compatibility</strong></td>
+          <td>ESP32 Dual-Core 240MHz, Raspberry Pi 4/5/Zero, STM32, Arduino Uno/Mega, PN532 RFID</td>
+        </tr>
+        <tr>
+          <td><strong>Networking Protocols</strong></td>
+          <td>MQTT v3.1.1 / v5 over TLS 1.3, HTTPS REST API, WebSockets, CoAP</td>
+        </tr>
+        <tr>
+          <td><strong>Database & Security</strong></td>
+          <td>Supabase PostgreSQL, AES-256 Cloud Storage, JWT Bearer Token Auth, Row Level Security</td>
+        </tr>
+        <tr>
+          <td><strong>Sensor Integration</strong></td>
+          <td>DHT22/DHT11, Analog Voltage Probes, Digital Logic Analyzers, Relay Modules, OLED Displays</td>
+        </tr>
+        <tr>
+          <td><strong>Latency & Reliability</strong></td>
+          <td>&lt;120ms cloud sync time, local EEPROM failover buffer up to 10,000 offline scans</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Call to Action Banner -->
+    <div class="cta-banner">
+      <h2>Deploy Matrix-IoT in Your Campus Today</h2>
+      <p>Host your smart campus labs at <strong>matrix-iot.com</strong> or seamlessly integrate into Matrix LMS Cloud.</p>
+      <a href="https://matrix-iot.com" class="btn" onclick="window.print(); return false;">Print / Save as PDF Brochure</a>
+    </div>
+
+  </div>
+
+  <footer>
+    &copy; 2026 Matrix-IoT Systems Inc. All rights reserved. | matrix-iot.com | CollegeLMS Cloud Integration
+  </footer>
+
+</body>
+</html>

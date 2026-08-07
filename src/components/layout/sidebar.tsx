@@ -18,7 +18,9 @@ import {
   ShieldCheck,
   Building2,
   Bell,
-  Award
+  Award,
+  Cpu,
+  Package
 } from 'lucide-react';
 
 export function Sidebar() {
@@ -42,6 +44,8 @@ export function Sidebar() {
   ];
 
   const platformNav = [
+    { name: 'Products Catalog', href: '/products', icon: Package },
+    { name: 'Matrix-IoT Platform', href: '/products/matrix-iot', icon: Cpu },
     { name: 'Platform SaaS Admin', href: '/platform', icon: ShieldCheck },
   ];
 

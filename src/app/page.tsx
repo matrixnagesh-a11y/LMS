@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Building2, ShieldCheck, BookOpen, GraduationCap, ArrowRight, Palette } from 'lucide-react';
+import { Building2, ShieldCheck, BookOpen, GraduationCap, ArrowRight, Palette, Cpu } from 'lucide-react';
 
 export default function HomePage() {
   return (
@@ -78,7 +78,11 @@ export default function HomePage() {
       </div>
 
       {/* Quick Nav Links */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+        <Link href="/matrix-iot" className="p-4 bg-white border border-blue-200 rounded-xl hover:shadow-md text-center space-y-2 block transition-all bg-gradient-to-b from-blue-50/50 to-white">
+          <Cpu className="w-6 h-6 text-blue-600 mx-auto" />
+          <p className="text-xs font-bold text-slate-900">Matrix-IoT Hub</p>
+        </Link>
         <Link href="/platform" className="p-4 bg-white border border-slate-200 rounded-xl hover:shadow-sm text-center space-y-2 block">
           <ShieldCheck className="w-6 h-6 text-primary mx-auto" />
           <p className="text-xs font-bold text-slate-900">Platform Super Admin</p>
