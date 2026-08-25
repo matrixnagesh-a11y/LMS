@@ -29,6 +29,49 @@ const DEFAULT_FULL_BRANDING: TenantBranding = {
   login_bg_url: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=1200&auto=format&fit=crop&q=80',
 };
 
+const resolveTenantFromPath = (pathname: string | null) => {
+  if (pathname && pathname.startsWith('/c/')) {
+    const parts = pathname.split('/');
+    const slug = parts[2];
+    if (slug) {
+      const known = INITIAL_COLLEGES[slug];
+      if (known) {
+        return {
+          name: known.name,
+          branding: {
+            ...DEFAULT_FULL_BRANDING,
+            primary_color: known.primaryColor,
+            secondary_color: known.secondaryColor,
+            logo_url: known.logoUrl || DEFAULT_FULL_BRANDING.logo_url,
+            login_bg_url: known.bgUrl || DEFAULT_FULL_BRANDING.login_bg_url,
+            welcome_message: known.welcomeMessage,
+            introduction: known.introduction,
+            privacy_policy: known.privacyPolicy,
+            terms_of_use: known.termsOfUse,
+            college_abbreviation: known.code || 'LMS',
+          }
+        };
+      } else {
+        const formattedName = slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+        return {
+          name: formattedName,
+          branding: {
+            ...DEFAULT_FULL_BRANDING,
+            primary_color: '#0284C7',
+            secondary_color: '#0D9488',
+            welcome_message: `Welcome to ${formattedName} LMS Portal`,
+            college_abbreviation: slug.substring(0, 3).toUpperCase(),
+          }
+        };
+      }
+    }
+  }
+  return {
+    name: 'Meridian College',
+    branding: DEFAULT_FULL_BRANDING
+  };
+};
+
 const TenantContext = createContext<TenantContextType>({
   branding: DEFAULT_FULL_BRANDING,
   tenantName: 'Meridian College',
@@ -43,43 +86,16 @@ export function TenantProvider({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const [branding, setBranding] = useState<TenantBranding>(DEFAULT_FULL_BRANDING);
-  const [tenantName, setTenantName] = useState<string>('Meridian College');
+  const initial = resolveTenantFromPath(pathname);
 
-  // Automatically sync tenant from URL path (/c/[tenantSlug])
+  const [tenantName, setTenantName] = useState<string>(initial.name);
+  const [branding, setBranding] = useState<TenantBranding>(initial.branding);
+
+  // Sync state whenever pathname changes (SSR and Client)
   useEffect(() => {
-    if (pathname && pathname.startsWith('/c/')) {
-      const parts = pathname.split('/');
-      const slug = parts[2];
-      if (slug) {
-        const known = INITIAL_COLLEGES[slug];
-        if (known) {
-          setTenantName(known.name);
-          setBranding(prev => ({
-            ...prev,
-            primary_color: known.primaryColor,
-            secondary_color: known.secondaryColor,
-            logo_url: known.logoUrl || prev.logo_url,
-            login_bg_url: known.bgUrl || prev.login_bg_url,
-            welcome_message: known.welcomeMessage,
-            introduction: known.introduction,
-            privacy_policy: known.privacyPolicy,
-            terms_of_use: known.termsOfUse,
-            college_abbreviation: known.code || 'LMS',
-          }));
-        } else {
-          const formattedName = slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
-          setTenantName(formattedName);
-          setBranding(prev => ({
-            ...prev,
-            primary_color: '#0284C7',
-            secondary_color: '#0D9488',
-            welcome_message: `Welcome to ${formattedName} LMS Portal`,
-            college_abbreviation: slug.substring(0, 3).toUpperCase(),
-          }));
-        }
-      }
-    }
+    const current = resolveTenantFromPath(pathname);
+    setTenantName(current.name);
+    setBranding(current.branding);
   }, [pathname]);
 
   useEffect(() => {
