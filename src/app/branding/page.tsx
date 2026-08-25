@@ -117,7 +117,7 @@ export default function BrandingPage() {
               <CardTitle className="text-base flex items-center">
                 <ImageIcon className="w-5 h-5 mr-2 text-primary" /> 1. Upload College Logo & Graphics
               </CardTitle>
-              <CardDescription>Upload your institution's official logo and login background images</CardDescription>
+              <CardDescription>Upload your institution&apos;s official logo and login background images</CardDescription>
             </CardHeader>
             <CardContent className="space-y-5">
               {/* Logo Upload */}

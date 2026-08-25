@@ -20,7 +20,7 @@ export default function DynamicStandaloneModulePage() {
     if (knownCollege) {
       selectCollegeTenant(knownCollege.name, knownCollege.primaryColor, knownCollege.secondaryColor);
     }
-  }, [slug]);
+  }, [slug, selectCollegeTenant]);
 
   const moduleTitle = moduleSlug.charAt(0).toUpperCase() + moduleSlug.slice(1).replace('-', ' ');
 

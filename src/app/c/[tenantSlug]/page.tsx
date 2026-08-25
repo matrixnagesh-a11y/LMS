@@ -35,7 +35,7 @@ export default function StandaloneCollegeDashboardPage() {
       const formattedName = slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
       selectCollegeTenant(formattedName, '#0284C7', '#0D9488');
     }
-  }, [slug]);
+  }, [slug, selectCollegeTenant]);
 
   return (
     <div className="space-y-8 max-w-7xl mx-auto">

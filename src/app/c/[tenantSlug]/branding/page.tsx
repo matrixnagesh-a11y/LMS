@@ -31,7 +31,7 @@ export default function StandaloneBrandingPage() {
     if (knownCollege) {
       selectCollegeTenant(knownCollege.name, knownCollege.primaryColor, knownCollege.secondaryColor);
     }
-  }, [slug]);
+  }, [slug, selectCollegeTenant]);
 
   // Form State
   const [collegeTitle, setCollegeTitle] = useState(tenantName);
@@ -100,7 +100,7 @@ export default function StandaloneBrandingPage() {
             <Palette className="w-6 h-6 mr-2 text-primary" /> Customize {collegeTitle} LMS Branding
           </h1>
           <p className="text-sm text-slate-500 mt-1">
-            Upload your institution's official logo, background imagery, intro statement, privacy policies, and brand theme colors.
+            Upload your institution&apos;s official logo, background imagery, intro statement, privacy policies, and brand theme colors.
           </p>
         </div>
         <Button onClick={handleSaveBranding} className="bg-primary hover:bg-primary/90 text-white font-bold px-5">
