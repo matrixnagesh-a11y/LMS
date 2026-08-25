@@ -1,8 +1,10 @@
 'use client';
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
 import { TenantBranding } from '@/lib/types/database';
-import { DEFAULT_BRANDING, hexToHsl } from '@/lib/tenant';
+import { hexToHsl } from '@/lib/tenant';
+import { INITIAL_COLLEGES } from '@/lib/tenant-store';
 
 interface TenantContextType {
   branding: TenantBranding;
@@ -40,8 +42,45 @@ export function TenantProvider({
 }: {
   children: React.ReactNode;
 }) {
+  const pathname = usePathname();
   const [branding, setBranding] = useState<TenantBranding>(DEFAULT_FULL_BRANDING);
   const [tenantName, setTenantName] = useState<string>('Meridian College');
+
+  // Automatically sync tenant from URL path (/c/[tenantSlug])
+  useEffect(() => {
+    if (pathname && pathname.startsWith('/c/')) {
+      const parts = pathname.split('/');
+      const slug = parts[2];
+      if (slug) {
+        const known = INITIAL_COLLEGES[slug];
+        if (known) {
+          setTenantName(known.name);
+          setBranding(prev => ({
+            ...prev,
+            primary_color: known.primaryColor,
+            secondary_color: known.secondaryColor,
+            logo_url: known.logoUrl || prev.logo_url,
+            login_bg_url: known.bgUrl || prev.login_bg_url,
+            welcome_message: known.welcomeMessage,
+            introduction: known.introduction,
+            privacy_policy: known.privacyPolicy,
+            terms_of_use: known.termsOfUse,
+            college_abbreviation: known.code || 'LMS',
+          }));
+        } else {
+          const formattedName = slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+          setTenantName(formattedName);
+          setBranding(prev => ({
+            ...prev,
+            primary_color: '#0284C7',
+            secondary_color: '#0D9488',
+            welcome_message: `Welcome to ${formattedName} LMS Portal`,
+            college_abbreviation: slug.substring(0, 3).toUpperCase(),
+          }));
+        }
+      }
+    }
+  }, [pathname]);
 
   useEffect(() => {
     if (branding.primary_color) {
@@ -58,13 +97,13 @@ export function TenantProvider({
   const selectCollegeTenant = (name: string, primaryColor?: string, secondaryColor?: string) => {
     setTenantName(name);
     const abbr = name.split(' ').map(w => w[0]).join('').substring(0, 3).toUpperCase();
-    setBranding({
-      ...branding,
+    setBranding(prev => ({
+      ...prev,
       primary_color: primaryColor || '#2563EB',
       secondary_color: secondaryColor || '#0F766E',
       college_abbreviation: abbr,
       welcome_message: `Welcome to ${name} LMS Portal`,
-    });
+    }));
   };
 
   return (

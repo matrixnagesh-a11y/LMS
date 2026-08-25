@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
-import { usePathname, useParams } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { useTenant } from '@/components/providers/tenant-provider';
 import {
   LayoutDashboard,
@@ -18,16 +18,17 @@ import {
   ShieldCheck,
   Building2,
   Award,
-  Menu,
   X
 } from 'lucide-react';
 
 export function Sidebar({ mobileOpen, setMobileOpen }: { mobileOpen?: boolean; setMobileOpen?: (open: boolean) => void }) {
-  const pathname = usePathname();
-  const params = useParams();
-  const tenantSlug = params?.tenantSlug as string;
+  const pathname = usePathname() || '';
   const { branding, tenantName } = useTenant();
 
+  // Robust tenantSlug extraction from pathname (/c/[tenantSlug]/...)
+  const parts = pathname.split('/');
+  const isTenantRoute = parts[1] === 'c' && parts[2];
+  const tenantSlug = isTenantRoute ? parts[2] : '';
   const basePath = tenantSlug ? `/c/${tenantSlug}` : '';
 
   const navigation = [
@@ -86,7 +87,10 @@ export function Sidebar({ mobileOpen, setMobileOpen }: { mobileOpen?: boolean; s
         <div className="px-3 py-4 space-y-1">
           <p className="px-3 text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-2">College Portal</p>
           {navigation.map((item) => {
-            const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(`${item.href}/`));
+            const isDashboard = item.href === basePath || item.href === '/dashboard';
+            const isActive = isDashboard
+              ? pathname === item.href || pathname === `${item.href}/`
+              : pathname === item.href || (item.href !== '/' && pathname.startsWith(`${item.href}/`));
             const Icon = item.icon;
             return (
               <Link
@@ -110,7 +114,7 @@ export function Sidebar({ mobileOpen, setMobileOpen }: { mobileOpen?: boolean; s
         <div className="px-3 py-2 border-t border-slate-100 space-y-1">
           <p className="px-3 text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-2">Learner View</p>
           {learnerNav.map((item) => {
-            const isActive = pathname === item.href;
+            const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(`${item.href}/`));
             const Icon = item.icon;
             return (
               <Link
