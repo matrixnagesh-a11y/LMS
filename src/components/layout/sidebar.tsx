@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useParams } from 'next/navigation';
 import { useTenant } from '@/components/providers/tenant-provider';
@@ -17,16 +17,17 @@ import {
   Palette,
   ShieldCheck,
   Building2,
-  Award
+  Award,
+  Menu,
+  X
 } from 'lucide-react';
 
-export function Sidebar() {
+export function Sidebar({ mobileOpen, setMobileOpen }: { mobileOpen?: boolean; setMobileOpen?: (open: boolean) => void }) {
   const pathname = usePathname();
   const params = useParams();
   const tenantSlug = params?.tenantSlug as string;
   const { branding, tenantName } = useTenant();
 
-  // If inside a standalone college route (/c/[tenantSlug]), map all links under /c/[tenantSlug]/...
   const basePath = tenantSlug ? `/c/${tenantSlug}` : '';
 
   const navigation = [
@@ -52,22 +53,33 @@ export function Sidebar() {
     { name: 'My Certificates', href: tenantSlug ? `${basePath}/learn/certificates` : '/learn/certificates', icon: Award },
   ];
 
-  return (
-    <aside className="w-64 bg-white border-r border-slate-200 min-h-screen flex flex-col justify-between hidden md:flex">
+  const closeMobile = () => {
+    if (setMobileOpen) setMobileOpen(false);
+  };
+
+  const navContent = (
+    <div className="flex flex-col justify-between h-full py-4">
       <div>
         {/* Customer Standalone College LMS Header */}
-        <div className="p-4 border-b border-slate-100 flex items-center space-x-3 bg-slate-50/60">
-          {branding.logo_url ? (
-            <img src={branding.logo_url} alt="College Logo" className="w-10 h-10 object-contain rounded-lg border border-slate-200 bg-white p-0.5 shadow-2xs" />
-          ) : (
-            <div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center text-white font-bold text-base shadow-sm">
-              {branding.college_abbreviation || 'LMS'}
+        <div className="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/60">
+          <div className="flex items-center space-x-3">
+            {branding.logo_url ? (
+              <img src={branding.logo_url} alt="College Logo" className="w-10 h-10 object-contain rounded-lg border border-slate-200 bg-white p-0.5 shadow-2xs" />
+            ) : (
+              <div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center text-white font-bold text-base shadow-sm">
+                {branding.college_abbreviation || 'LMS'}
+              </div>
+            )}
+            <div className="min-w-0">
+              <h1 className="font-bold text-slate-900 text-sm truncate max-w-[150px]">{tenantName}</h1>
+              <p className="text-[11px] text-slate-500 font-medium">Standalone LMS Portal</p>
             </div>
-          )}
-          <div className="min-w-0">
-            <h1 className="font-bold text-slate-900 text-sm truncate max-w-[150px]">{tenantName}</h1>
-            <p className="text-[11px] text-slate-500 font-medium">Standalone LMS Portal</p>
           </div>
+          {setMobileOpen && (
+            <button onClick={closeMobile} className="md:hidden p-1 text-slate-400 hover:text-slate-600">
+              <X className="w-5 h-5" />
+            </button>
+          )}
         </div>
 
         {/* Navigation */}
@@ -80,6 +92,7 @@ export function Sidebar() {
               <Link
                 key={item.name}
                 href={item.href}
+                onClick={closeMobile}
                 className={`flex items-center space-x-3 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
                   isActive
                     ? 'bg-primary/10 text-primary font-semibold'
@@ -103,6 +116,7 @@ export function Sidebar() {
               <Link
                 key={item.name}
                 href={item.href}
+                onClick={closeMobile}
                 className={`flex items-center space-x-3 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
                   isActive
                     ? 'bg-secondary/10 text-secondary font-semibold'
@@ -117,11 +131,12 @@ export function Sidebar() {
         </div>
       </div>
 
-      {/* Host Onboarding Link (Only shown outside standalone tenant pages) */}
+      {/* Host Onboarding Link */}
       {!tenantSlug && (
         <div className="p-3 border-t border-slate-100 bg-slate-50">
           <Link
             href="/"
+            onClick={closeMobile}
             className="flex items-center space-x-3 px-3 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-200/60 rounded-md transition-colors"
           >
             <ShieldCheck className="w-4 h-4 text-slate-500" />
@@ -129,6 +144,25 @@ export function Sidebar() {
           </Link>
         </div>
       )}
-    </aside>
+    </div>
+  );
+
+  return (
+    <>
+      {/* Desktop Sidebar */}
+      <aside className="w-64 bg-white border-r border-slate-200 min-h-screen flex flex-col justify-between hidden md:flex">
+        {navContent}
+      </aside>
+
+      {/* Mobile Drawer Overlay */}
+      {mobileOpen && (
+        <div className="fixed inset-0 z-50 flex md:hidden">
+          <div className="fixed inset-0 bg-slate-900/60 backdrop-xs" onClick={closeMobile} />
+          <aside className="relative w-72 max-w-xs bg-white h-full shadow-2xl z-10 overflow-y-auto">
+            {navContent}
+          </aside>
+        </div>
+      )}
+    </>
   );
 }
