@@ -73,16 +73,16 @@ export default function StandaloneCollegeDashboardPage() {
           </p>
 
           <div className="pt-2 flex items-center space-x-3">
-            <Link href={`/c/${slug}/branding`}>
+            <a href={`/c/${slug}/branding`}>
               <Button size="sm" className="bg-primary hover:bg-primary/90 text-white font-bold text-xs">
                 <Palette className="w-3.5 h-3.5 mr-1.5" /> Customize Logo & Branding
               </Button>
-            </Link>
-            <Link href={`/c/${slug}/courses`}>
+            </a>
+            <a href={`/c/${slug}/courses`}>
               <Button size="sm" variant="outline" className="bg-white/10 text-white border-white/30 hover:bg-white/20 text-xs">
                 <BookOpen className="w-3.5 h-3.5 mr-1.5" /> Manage Courses
               </Button>
-            </Link>
+            </a>
           </div>
         </div>
       </div>
@@ -158,11 +158,11 @@ export default function StandaloneCollegeDashboardPage() {
                 <CardTitle className="text-base">Published Academic Courses</CardTitle>
                 <CardDescription>Configured course modules, materials, and student rosters</CardDescription>
               </div>
-              <Link href={`/c/${slug}/courses`}>
+              <a href={`/c/${slug}/courses`}>
                 <Button variant="outline" size="sm" className="text-xs">
                   <Plus className="w-3.5 h-3.5 mr-1" /> Add New Course
                 </Button>
-              </Link>
+              </a>
             </CardHeader>
             <CardContent>
               <div className="overflow-x-auto">

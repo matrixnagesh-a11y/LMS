@@ -93,7 +93,7 @@ export function Sidebar({ mobileOpen, setMobileOpen }: { mobileOpen?: boolean; s
               : pathname === item.href || (item.href !== '/' && pathname.startsWith(`${item.href}/`));
             const Icon = item.icon;
             return (
-              <Link
+              <a
                 key={item.name}
                 href={item.href}
                 onClick={closeMobile}
@@ -105,7 +105,7 @@ export function Sidebar({ mobileOpen, setMobileOpen }: { mobileOpen?: boolean; s
               >
                 <Icon className={`w-4 h-4 ${isActive ? 'text-primary' : 'text-slate-400'}`} />
                 <span>{item.name}</span>
-              </Link>
+              </a>
             );
           })}
         </div>
@@ -117,7 +117,7 @@ export function Sidebar({ mobileOpen, setMobileOpen }: { mobileOpen?: boolean; s
             const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(`${item.href}/`));
             const Icon = item.icon;
             return (
-              <Link
+              <a
                 key={item.name}
                 href={item.href}
                 onClick={closeMobile}
@@ -129,7 +129,7 @@ export function Sidebar({ mobileOpen, setMobileOpen }: { mobileOpen?: boolean; s
               >
                 <Icon className={`w-4 h-4 ${isActive ? 'text-secondary' : 'text-slate-400'}`} />
                 <span>{item.name}</span>
-              </Link>
+              </a>
             );
           })}
         </div>
@@ -138,14 +138,14 @@ export function Sidebar({ mobileOpen, setMobileOpen }: { mobileOpen?: boolean; s
       {/* Host Onboarding Link */}
       {!tenantSlug && (
         <div className="p-3 border-t border-slate-100 bg-slate-50">
-          <Link
+          <a
             href="/"
             onClick={closeMobile}
             className="flex items-center space-x-3 px-3 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-200/60 rounded-md transition-colors"
           >
             <ShieldCheck className="w-4 h-4 text-slate-500" />
             <span>Superadmin Host Landing</span>
-          </Link>
+          </a>
         </div>
       )}
     </div>
