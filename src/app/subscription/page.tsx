@@ -54,7 +54,7 @@ export default function SubscriptionPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-slate-900">34.2 GB / 100 GB</div>
-            <p className="text-xs text-slate-500 mt-1">Supabase Storage buckets</p>
+            <p className="text-xs text-slate-500 mt-1">AWS S3 Cloud Storage buckets</p>
           </CardContent>
         </Card>
       </div>

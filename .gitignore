@@ -32,3 +32,6 @@ next-env.d.ts
 # OS metadata
 ._*
 .DS_Store
+
+# local data
+data/

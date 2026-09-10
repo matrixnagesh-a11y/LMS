@@ -147,7 +147,7 @@ export default function ProductsPage() {
               </div>
               <CardTitle className="text-lg">Matrix Cloud LMS Integration</CardTitle>
               <CardDescription className="text-xs">
-                Multi-college SaaS LMS with Supabase Row Level Security powering custom branding, course management, and IoT telemetry.
+                Multi-college SaaS LMS with AWS Multi-Tenant Security powering custom branding, course management, and IoT telemetry.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">

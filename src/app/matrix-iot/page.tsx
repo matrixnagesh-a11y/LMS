@@ -99,7 +99,7 @@ export default function MatrixIoTPage() {
             </div>
             <div>
               <p className="text-xs text-slate-400 font-medium">Cloud Security</p>
-              <p className="text-xl font-bold text-purple-400">Supabase RLS</p>
+              <p className="text-xl font-bold text-purple-400">AWS Cloud Isolation</p>
             </div>
             <div>
               <p className="text-xs text-slate-400 font-medium">Protocol Standard</p>
@@ -288,7 +288,7 @@ export default function MatrixIoTPage() {
                 <CardTitle className="text-base">Matrix Cloud Sync Engine</CardTitle>
               </CardHeader>
               <CardContent className="text-xs text-slate-600 space-y-2">
-                <p>Supabase Row-Level Security validates college tenant IDs, student credentials, and updates PostgreSQL database tables instantly.</p>
+                <p>AWS Multi-Tenant Security validates college tenant IDs, student credentials, and updates PostgreSQL database tables instantly.</p>
                 <div className="bg-slate-100 p-2 rounded text-[11px] font-mono text-slate-800">Auth: Bearer JWT Token</div>
               </CardContent>
             </Card>

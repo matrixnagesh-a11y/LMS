@@ -101,7 +101,7 @@ export default function MatrixIoTBrochurePage() {
                 <div className="w-8 h-8 rounded-full bg-amber-500 text-white font-bold text-xs flex items-center justify-center mx-auto">3</div>
                 <ShieldCheck className="w-6 h-6 text-amber-400 mx-auto" />
                 <h3 className="font-bold text-sm text-slate-200">Matrix LMS Cloud</h3>
-                <p className="text-[11px] text-slate-400">Supabase Row-Level Security & College Isolation</p>
+                <p className="text-[11px] text-slate-400">AWS Enterprise Security & College Isolation</p>
               </div>
 
               {/* Arrow 3 */}
@@ -148,7 +148,7 @@ export default function MatrixIoTBrochurePage() {
                 <CardTitle className="text-base">Multi-Tenant Tenant Isolation</CardTitle>
               </CardHeader>
               <CardContent className="text-xs text-slate-600">
-                Strict data segregation across independent campuses via Supabase PostgreSQL Row Level Security policies.
+                Strict data segregation across independent campuses via AWS PostgreSQL multi-tenant isolation policies.
               </CardContent>
             </Card>
           </div>
@@ -184,7 +184,7 @@ export default function MatrixIoTBrochurePage() {
                 </tr>
                 <tr>
                   <td className="p-3 font-semibold text-slate-900">Cloud Integration</td>
-                  <td className="p-3">Matrix Cloud LMS, Supabase Auth, Webhooks, Custom Domain Hosting</td>
+                  <td className="p-3">Matrix Cloud LMS, AWS Cloud Auth, Webhooks, Custom Domain Hosting</td>
                 </tr>
               </tbody>
             </table>

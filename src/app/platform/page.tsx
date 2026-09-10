@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useTenant } from '@/components/providers/tenant-provider';
@@ -24,54 +24,78 @@ export default function PlatformAdminPage() {
   const { selectCollegeTenant } = useTenant();
   const [showProvisionModal, setShowProvisionModal] = useState(false);
 
-  // College Tenants List (Simple Onboarding Model)
-  const [colleges, setColleges] = useState([
-    {
-      id: 'c1',
-      name: 'Meridian College',
-      primaryColor: '#2563EB',
-      secondaryColor: '#0F766E',
-      status: 'Active LMS Workspace',
-      createdDate: 'Aug 03, 2026',
-    },
-    {
-      id: 'c2',
-      name: 'Horizon Training Institute',
-      primaryColor: '#7C3AED',
-      secondaryColor: '#059669',
-      status: 'Active LMS Workspace',
-      createdDate: 'Aug 04, 2026',
-    },
-  ]);
+  // College Tenants List loaded from database
+  const [colleges, setColleges] = useState<Array<{ id: string; name: string; primaryColor: string; secondaryColor: string; status: string; createdDate: string; slug?: string }>>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Load tenants on mount
+  useEffect(() => {
+    fetch('/api/tenants')
+      .then(res => res.json())
+      .then(json => {
+        if (json.success && Array.isArray(json.data)) {
+          const mapped = json.data.map((t: any) => ({
+            id: t.id,
+            name: t.display_name || t.legal_name,
+            primaryColor: t.branding?.primary_color || '#2563EB',
+            secondaryColor: t.branding?.secondary_color || '#0F766E',
+            status: 'Active LMS Workspace',
+            createdDate: new Date(t.created_at || Date.now()).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
+            slug: t.subdomain,
+          }));
+          setColleges(mapped);
+        }
+      })
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, []);
 
   // Ultra-Simple Onboarding Form State: JUST COLLEGE NAME!
   const [collegeNameInput, setCollegeNameInput] = useState('');
+  const [submitting, setSubmitting] = useState(false);
 
-  const handleSimpleOnboard = (e: React.FormEvent) => {
+  const handleSimpleOnboard = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!collegeNameInput.trim()) return;
+    if (!collegeNameInput.trim() || submitting) return;
+    setSubmitting(true);
 
-    const newCollege = {
-      id: 'c_' + Math.random().toString(36).substring(2, 7),
-      name: collegeNameInput.trim(),
-      primaryColor: '#0284C7',
-      secondaryColor: '#0D9488',
-      status: 'Active LMS Workspace',
-      createdDate: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
-    };
-
-    setColleges([newCollege, ...colleges]);
-    setShowProvisionModal(false);
-    setCollegeNameInput('');
-
-    // Automatically switch to the newly created standalone college workspace!
-    selectCollegeTenant(newCollege.name, newCollege.primaryColor, newCollege.secondaryColor);
-    router.push('/branding');
+    try {
+      const res = await fetch('/api/tenants', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: collegeNameInput.trim() })
+      });
+      const data = await res.json();
+      if (data.success) {
+        const newCol = {
+          id: data.tenant.id,
+          name: data.tenant.display_name,
+          primaryColor: data.tenant.branding?.primary_color || '#2563EB',
+          secondaryColor: data.tenant.branding?.secondary_color || '#0F766E',
+          status: 'Active LMS Workspace',
+          createdDate: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
+          slug: data.slug,
+        };
+        setColleges(prev => [newCol, ...prev]);
+        setShowProvisionModal(false);
+        setCollegeNameInput('');
+        selectCollegeTenant(newCol.name, newCol.primaryColor, newCol.secondaryColor);
+        router.push(`/c/${data.slug}/branding`);
+      }
+    } catch {
+      // handled gracefully
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const handleOpenCollegeLMS = (college: typeof colleges[0]) => {
     selectCollegeTenant(college.name, college.primaryColor, college.secondaryColor);
-    router.push('/dashboard');
+    if (college.slug) {
+      router.push(`/c/${college.slug}`);
+    } else {
+      router.push('/dashboard');
+    }
   };
 
   return (
